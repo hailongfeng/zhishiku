@@ -1,0 +1,1 @@
+wsdl2java -p com.wizarpos.webclient.hello -d F:\SSD\workspace\eclipse\webservice_cxf\src\main\java http://localhost:8999/services/hello?wsdl
