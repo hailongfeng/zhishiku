@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mzba.fresco" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:name=".FrescoApplication"
+        android:hardwareAccelerated="true"
+        android:theme="@style/AppTheme.Design" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.ViewPagerActivity" />
+        <activity android:name=".ui.SubsamplingScaleActivity" />
+        <activity android:name=".ui.GifActivity" />
+        <activity android:name=".ui.CustomGifViewActivity" />
+    </application>
+
+</manifest>
