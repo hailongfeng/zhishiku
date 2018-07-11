@@ -1,0 +1,6 @@
+项目GitHub地址：https://github.com/bingoogolapple/BGAQRCode-Android
+zxing项目使用的是Google的com.google.zxing:core:3.3.3，其中加上了自己的编码和解码功能
+
+zxing项目依赖qrcodecore项目，qrcodecore中增加了UI层
+
+zxingdemo依赖zxing项目
