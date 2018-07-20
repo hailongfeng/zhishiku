@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.springframework.org/schema/jms" xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/jms
+      http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+      http://activemq.apache.org/schema/core
+      http://activemq.apache.org/schema/core/activemq-core-5.14.5.xsd">
+
+    <amq:connectionFactory id="amqConnectionFactory"
+                           brokerURL="tcp://192.168.11.41:61616"
+                           userName="admin"
+                           password="admin" />
+
+    <!-- 配置JMS连接工长 -->
+    <bean id="connectionFactory"
+          class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="amqConnectionFactory" />
+        <property name="sessionCacheSize" value="100" />
+    </bean>
+
+    <!-- 定义消息队列（Queue） -->
+    <bean id="demoQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <!-- 设置消息队列的名字 -->
+        <constructor-arg>
+            <value>hbaq.queue</value>
+        </constructor-arg>
+    </bean>
+    <!--订阅主题  -->
+    <bean id="demoTopicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg>
+            <value>hbaq.topic</value>
+        </constructor-arg>
+    </bean>
+
+
+
+    <!-- 配置JMS模板（Queue），Spring提供的JMS工具类，它发送、接收消息。 -->
+    <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="defaultDestination" ref="demoQueueDestination" />
+        <property name="receiveTimeout" value="10000" />
+        <!-- true是topic，false是queue，默认是false，此处显示写出false -->
+        <property name="pubSubDomain" value="false" />
+    </bean>
+
+    <!--Topic类型JmsTemplate  -->
+    <bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="demoTopicDestination"/>
+        <property name="receiveTimeout" value="10000"/>
+        <!--pub/sub（发布/订阅）模式 -->
+        <property name="pubSubDomain" value="true"/>
+    </bean>
+
+    <bean id="queueListener" class="com.fhl.activitymq.activityma.QueueListener" />
+    <bean id="topicListener" class="com.fhl.activitymq.activityma.TopicListener" />
+
+    <!-- 显示注入消息监听容器（Queue），配置连接工厂，监听的目标是demoQueueDestination，监听器是上面定义的监听器 -->
+    <bean id="queueListenerContainer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="demoQueueDestination" />
+        <property name="messageListener" ref="queueListener" />
+    </bean>
+    <!-- 显示注入消息监听容器（Topic），配置连接工厂，监听的目标是demoQueueDestination，监听器是上面定义的监听器 -->
+    <bean id="topicListenerContainer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="demoTopicDestination" />
+        <property name="messageListener" ref="topicListener" />
+    </bean>
+
+
+</beans>

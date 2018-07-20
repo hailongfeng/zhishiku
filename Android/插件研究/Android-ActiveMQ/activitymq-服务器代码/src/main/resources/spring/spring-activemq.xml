@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.springframework.org/schema/jms" xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/jms
+      http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+      http://activemq.apache.org/schema/core
+      http://activemq.apache.org/schema/core/activemq-core-5.14.5.xsd">
+
+    <!--activemq连接工厂 -->
+    <amq:connectionFactory id="activemqConnectionFactory" brokerURL="tcp://192.168.11.41:61616" userName="admin" password="admin"></amq:connectionFactory>
+
+    <!--spring连接工厂，管理activemq连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <!--管理对象，对应activemq连接工厂  -->
+        <property name="targetConnectionFactory" ref="activemqConnectionFactory"></property>
+        <!--session缓存数量  -->
+        <property name="sessionCacheSize" value="100"/>
+    </bean>
+
+    <!--定义消息队列  -->
+    <bean id="tttQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <!--消息队列名称  -->
+        <constructor-arg>
+            <value>ttt.queue</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="tttTopicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <!--订阅主题名称  -->
+        <constructor-arg>
+            <value>ttt.topic</value>
+        </constructor-arg>
+    </bean>
+
+    <!--消息生产者  -->
+    <!--队列类型JmsTemplate  -->
+    <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="tttQueueDestination"/>
+        <property name="receiveTimeout" value="10000"/>
+        <!--非pub/sub（发布/订阅）模式，即队列模式 -->
+        <property name="pubSubDomain" value="false"/>
+    </bean>
+
+    <!--Topic类型JmsTemplate  -->
+    <bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="tttTopicDestination"/>
+        <property name="receiveTimeout" value="10000"/>
+        <!--pub/sub（发布/订阅）模式 -->
+        <property name="pubSubDomain" value="true"/>
+    </bean>
+
+    <!--消息消费者-->
+
+    <jms:listener-container destination-type="queue" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
+        <!--队列监听器  -->
+        <jms:listener destination="ttt.queue" ref="queueListener"/>
+    </jms:listener-container>
+
+    <jms:listener-container destination-type="topic" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
+        <!--Topic监听器  -->
+        <jms:listener destination="ttt.topic" ref="topicListener"/>
+    </jms:listener-container>
+
+
+</beans>

@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+def javaVersion = JavaVersion.VERSION_1_8
+android {
+    compileSdkVersion 27
+    compileOptions {
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
+    }
+
+    defaultConfig {
+        applicationId "paho.mqtt.java.example"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dexOptions {
+        preDexLibraries = false
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+ext{
+
+    compileSdkVersion = 27
+    buildToolsVersion = '23.0.3'
+
+
+    group = 'org.eclipse.paho'
+
+    sampleArchivesBaseName = 'org.eclipse.paho.android.sample'
+    sampleVersion = '1.1.1'
+
+    serviceArchivesBaseName = 'org.eclipse.paho.android.service'
+    serviceVersion = '1.1.1'
+
+    clientVersion = '1.1.0'
+
+    mavenUrl = "https://repo.eclipse.org/content/repositories/paho-releases/"
+
+    supportLibVersion = '27.1.1'
+
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation "com.android.support:design:27.1.1"
+    implementation "com.android.support:recyclerview-v7:27.1.1"
+
+//    compile "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${ext.clientVersion}"
+    implementation ('org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'){
+        exclude module: 'support-v4'
+    }
+    implementation ('org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'){
+        exclude module: 'support-v4'
+    }
+}
