@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.zetetic"
+    android:versionCode="1"
+    android:versionName="1.0-SNAPSHOT">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".ZeteticApplication"
+        android:debuggable="true"
+        android:icon="@drawable/icon"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:label="@string/app_name">
+        <activity
+            android:name=".activities.TestRunnerSelectionActivity"
+            android:keepScreenOn="true">
+        </activity>
+        <activity android:name=".activities.TestSuiteBehaviorsActivity" />
+        <activity android:name=".activities.TestScrollingCursorActivity" />
+
+        <provider
+            android:name=".ZeteticContentProvider"
+            android:authorities="net.zetetic.sqlcipher.zeteticprovider" />
+        <provider
+            android:name=".ZeteticContentProvider2"
+            android:authorities="net.zetetic.sqlcipher.zeteticprovider2"
+            android:process=":provider" />
+
+        <activity android:name=".mytest.BookDbActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
