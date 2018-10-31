@@ -1,0 +1,1 @@
+Android 5.0后，Toast 受限制，关闭通知后，toast也不显示的问题。
