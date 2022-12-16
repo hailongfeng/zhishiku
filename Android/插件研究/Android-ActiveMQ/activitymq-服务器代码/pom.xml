@@ -21,7 +21,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <!-- 版本管理 -->
             <!--<springframework>4.1.8.RELEASE</springframework>-->
-      <springframework>3.1.0.RELEASE</springframework>
+      <springframework>5.2.20.RELEASE</springframework>
 
     </properties>
 
